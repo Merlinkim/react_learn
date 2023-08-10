@@ -174,12 +174,15 @@ function App() {
       }
     }
     content=<Article title={title} body={body}></Article>
-  }else if (mode === 'create'){
-    content=<Create onCreate={(_title,_body)=>{
-      const newTopic = {id:nextId,title:_title,body:_body}
-      const newTopics=[...topics]
+  }else if (mode === 'CREATE') {
+    content = <Create onCreate={(_title,_body)=>{
+      const newTopic = {id:nextId, title:_title,body:_body};
+      const newTopics = [...topics];
       newTopics.push(newTopic);
       setTopics(newTopics);
+      setMode('READ');
+      setId(nextId);
+      setNextId(nextId+1);
     }}></Create>
   }
   return (
@@ -213,5 +216,9 @@ export default App;
   <li>다시 App부분의 Create를 보면 submit event로 저장된 title,body그리고 nextId state를 통해서 newTopic에다가 딕셔너리 형태로 저장하였다.</li>
   <li>원본데이터를 복제하여 복제된 원본데이터에 추가사항을 push해여 추가해주었다.</li>
   <li>Topics state에다가 복제된 원본 데이터를 원본데이터와 교체해주었다</li>
+  <li>그리고 나서 현재의 아이디 값을 저장하기 위하여 setId state를 호출하여 nextId를 저장하였다</li>
+  <li>다음 ID값을 위하여 setNextId state를 호출하여 nextId에 +1를하며 저장하였다</li>
 </ol>
 <br>
+<h3>값을 복제하여 push한 이유<h3>
+만약에 값을 복제하지 않고 state를 호출하여 객체 혹은 배열을 수정하여 함수를 호출하게 되면 HTML이 재렌더링 되지 않기 때문이다.
