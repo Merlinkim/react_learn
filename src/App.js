@@ -3,7 +3,6 @@ import './App.css';
 import {useState} from 'react';
 
 function Header(props){
-  console.log('props',props,props.title);
   return (
     <header>
       <h1><a href="/" onClick={(event)=>{

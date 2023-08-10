@@ -49,7 +49,10 @@ state의 사용법<br>
 function Defi(props){
   return(
     <div>
-      <h2>{props.title}</h2>
+      <h2 onClick={(event)=>{
+        event.preventDefault();
+        event.onChangeMode();
+      }}>{props.title}</h2>
       {props.context}
     </div>
   )
@@ -63,8 +66,14 @@ function App(){
     }else if (mode === 'python'){
     contents=<Defi title='hello' context='my python'></Defi>
     <ul>
-      <li onChangeMode={()=>{setMode('python');}}><a href='/python'>python</li>
-      <li onChangeMode={()=>{setMode('React');}}><a href='/react'>React</li>
+      <li onChangeMode={()=>{
+        event.preventDefault();
+        setMode('python');
+      }}><a href='/python'>python</li>
+      <li onChangeMode={()=>{
+        event.preventDefault();
+        setMode('React');
+    }}><a href='/react'>React</li>
     </ul>
     {contents}
     }
