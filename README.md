@@ -84,3 +84,134 @@ function App(){
 <hr>
 <br>
 기초 CRUD
+
+Create
+무언가를 생성할려면 입력받아서 DB로 넘겨준다 혹은 입력받은 데이터를 리스트 혹은 array형태의 무언가에 담아두었다가 불러낼수 있어야한다.
+```JSX
+import logo from './logo.svg';
+import './App.css';
+import {useState} from 'react';
+
+function Header(props){
+  return (
+    <header>
+      <h1><a href="/" onClick={(event)=>{
+        event.preventDefault();
+        props.onChangeMode();
+      }}>{props.title}</a></h1>
+    </header>
+      );
+}
+
+function Nav(props){
+  const lis = []
+  for(let i = 0;i < props.topics.length; i++){
+    let t = props.topics[i]
+    lis.push(
+      <li key={t.id}>
+      <a id={t.id} href={'/read/'+t.id} onClick={event=>{
+        event.preventDefault();
+        props.onChangeMode(Number(event.target.id));
+      }}>{t.title}</a>
+      </li>
+      ) 
+  }
+  return(
+      <nav>
+        <ol>
+          {lis}
+        </ol>
+      </nav>
+    )
+}
+
+function Article(props){
+  return(
+      <article>
+        <h2>{props.title}</h2>
+        {props.body}
+      </article>
+  )
+}
+
+function Create(props){
+  return(
+    <article>
+      <h2>Create</h2>
+      <form onSubmit={event=>{
+        event.preventDefault();
+        const title = event.target.title.value;
+        const body = event.target.body.value;
+        props.onCreate(title,body);
+      }}>
+        <p><input type='text' name='title' placeholder='title'/></p>
+        <p><textarea name='body' placeholder="body"></textarea></p>
+        <p><input type="submit" value="Create"></input></p>
+      </form>
+    </article>
+  )
+}
+function App() {
+  const [mode,setMode]=useState('WELCOME');
+
+  const [id,setId]=useState(null);
+  const [nextId,setNextId]=useState(4);
+
+  const [topics,setTopics] = useState([
+      {id:1, title:'html',body:'html is ....'},
+      {id:2, title:'css',body:'css is ....'},
+      {id:3, title:'js',body:'js is ....'}
+    ]);
+  let content = null;
+  if (mode === 'WELCOME'){
+    content=<Article title="Welcome" body='Hello WEB'></Article>
+  }else if (mode === 'read'){
+    let title,body = null;
+    for(let i=0; i<topics.length; i++){
+      if(topics[i].id === id){
+        title=topics[i].title;
+        body=topics[i].body;
+      }
+    }
+    content=<Article title={title} body={body}></Article>
+  }else if (mode === 'create'){
+    content=<Create onCreate={(_title,_body)=>{
+      const newTopic = {id:nextId,title:_title,body:_body}
+      const newTopics=[...topics]
+      newTopics.push(newTopic);
+      setTopics(newTopics);
+    }}></Create>
+  }
+  return (
+    <div>
+      <Header title='WEB' onChangeMode={
+        ()=>{
+          setMode('WELCOME');
+        }
+      }></Header>
+      <Nav topics={topics} onChangeMode={(_id)=>{
+        setMode('read');
+        setId(_id);
+      }}></Nav>
+      {content}
+      <ul>
+        <li><a href='/ceate' onClick={event=>{
+          event.preventDefault();
+          setMode('create');
+        }}>create</a></li>
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+```
+<h3>코드 순서 설명</h3>
+<ol>
+  <li>App부분 App의 Create부분을 보면 mode를 state를 통해서 create로 바꾸게 된다면 Create compoent가 발생하게 된다..</li>
+  <li>create compoent에서 sumbit event가 발생되면 event.target.title.value값과 event.target.body.value를 title과 body에 각각 저장하였다.</li>
+  <li>다시 App부분의 Create를 보면 submit event로 저장된 title,body그리고 nextId state를 통해서 newTopic에다가 딕셔너리 형태로 저장하였다.</li>
+  <li>원본데이터를 복제하여 복제된 원본데이터에 추가사항을 push해여 추가해주었다.</li>
+  <li>Topics state에다가 복제된 원본 데이터를 원본데이터와 교체해주었다</li>
+</ol>
+<br>
