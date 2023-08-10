@@ -26,7 +26,7 @@ compoent는 react의 구성의 최소 요소라고 생각하면 편할것이다.
 <hr>
 props의 사용법<br>
 
-```
+```JSX
 function Defi(props){
   return(
     <div>
@@ -45,7 +45,7 @@ function App(){
 <hr>
 state의 사용법<br>
 
-```
+```JSX
 function Defi(props){
   return(
     <div>
